@@ -1,0 +1,8 @@
+/home/dani/lab/PBioDaemon/PBioDaemon/PBioDaemonLibrary/obj/Debug/.NETFramework,Version=v4.5.AssemblyAttribute.cs
+/home/dani/lab/PBioDaemon/PBioDaemon/PBioDaemonLibrary/bin/Debug/MySql.Data.dll
+/home/dani/lab/PBioDaemon/PBioDaemon/PBioDaemonLibrary/obj/Debug/.NETFramework,Version=v4.0.AssemblyAttribute.cs
+/home/dani/lab/PBioDaemon/PBioDaemon/PBioDaemonLibrary/bin/Debug/PBioDaemonLibrary.dll.config
+/home/dani/lab/PBioDaemon/PBioDaemon/PBioDaemonLibrary/bin/Debug/PBioDaemonLibrary.dll.mdb
+/home/dani/lab/PBioDaemon/PBioDaemon/PBioDaemonLibrary/bin/Debug/PBioDaemonLibrary.dll
+/home/dani/lab/PBioDaemon/PBioDaemon/PBioDaemonLibrary/obj/Debug/PBioDaemonLibrary.dll
+/home/dani/lab/PBioDaemon/PBioDaemon/PBioDaemonLibrary/obj/Debug/PBioDaemonLibrary.dll.mdb

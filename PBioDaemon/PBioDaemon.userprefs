@@ -1,0 +1,13 @@
+﻿<Properties StartupItem="PBioDaemon/PBioDaemon.csproj">
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|x86" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="PBioDaemonLauncher/SimulationLauncher.cs">
+    <Files>
+      <File FileName="PBioDaemonLauncher/SimulationLauncher.cs" Line="10" Column="10" />
+    </Files>
+  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore />
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+  <AuthorInfo Name="Daniel Sánchez Prolongo" Email="daniprolongo@gmail.com" Copyright="Daniel Sánchez Prolongo" Company="Universidad de Málaga" Trademark="" />
+</Properties>
