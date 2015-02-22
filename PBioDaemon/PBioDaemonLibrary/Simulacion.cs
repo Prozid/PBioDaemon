@@ -1,8 +1,10 @@
 ﻿using System;
+using System.Configuration;
 using System.IO;
 using System.Xml.Linq;
 using System.Xml;
 using System.Xml.Serialization;
+using MySql.Data.MySqlClient;
 
 namespace PBioDaemonLibrary
 {
@@ -23,6 +25,31 @@ namespace PBioDaemonLibrary
 
 		[XmlIgnoreAttribute]
 		public String Datos { get; set; }
+
+		public static Simulacion GetSimulation(Guid idProcess)
+		{
+			String cs = ConfigurationManager.ConnectionStrings["db"].ToString();
+			Simulacion simulation = null;
+
+			using (MySqlConnection conn = new MySqlConnection(cs))
+			{
+				String qSim = "SELECT * FROM Proceso WHERE IdProceso = '" + idProcess + "'";
+
+				conn.Open();
+				MySqlCommand comm = new MySqlCommand(qSim, conn);
+				MySqlDataReader reader = comm.ExecuteReader();
+
+				while (reader.Read())
+				{
+					simulation = Simulacion.DeserializeFromXML(reader.GetString("Xml"));
+					simulation.Datos = reader.GetString("Datos");
+
+				}
+				reader.Close();
+			}
+
+			return simulation;
+		}
 
 		public static void Serialize(string file, Simulacion sim)
 		{

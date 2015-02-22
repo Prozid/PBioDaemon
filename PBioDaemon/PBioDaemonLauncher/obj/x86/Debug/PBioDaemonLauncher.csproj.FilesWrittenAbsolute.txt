@@ -1,0 +1,4 @@
+/home/dani/lab/PBioDaemon/PBioDaemon/PBioDaemonLauncher/obj/x86/Debug/.NETFramework,Version=v4.5.AssemblyAttribute.cs
+/home/dani/lab/PBioDaemon/PBioDaemon/PBioDaemonLauncher/bin/Debug/PBioDaemonLibrary.dll
+/home/dani/lab/PBioDaemon/PBioDaemon/PBioDaemonLauncher/bin/Debug/PBioDaemonLibrary.dll.mdb
+/home/dani/lab/PBioDaemon/PBioDaemon/PBioDaemonLauncher/bin/Debug/MySql.Data.dll

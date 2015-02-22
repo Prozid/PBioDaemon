@@ -41,15 +41,13 @@ namespace PBioDaemon
 			public StringBuilder sb = new StringBuilder();
 		}
 
-		public static ManualResetEvent allDone = new ManualResetEvent(false); // TODO Evento para 
-		private PBioDaemonDB db;	
+		public static ManualResetEvent allDone = new ManualResetEvent(false); // TODO Evento para 	
 		private PBioDaemonConfiguration config;
 
 
 		public PBioDaemonListener ()
 		{
 			config = new PBioDaemonConfiguration ();
-			db = new PBioDaemonDB(config.CONNECTION_STRING);
 		}
 
 		public void Run()
@@ -155,13 +153,14 @@ namespace PBioDaemon
 				// Obtenemos los datos
 				String data = datosSimulacion.Root.Element("Datos").Value;
 				datosSimulacion.Root.Element("Datos").Remove();
-				Console.WriteLine("[SERVER SOCKET] XML saved to hard disk.");
 
 				// Insertamos la nueva simulacion en la base de datos.
-				Guid idSimulation = db.NewProcess(datosSimulacion, data);
+				Guid idProcess = Proceso.Create(datosSimulacion, data);
+
+				Console.WriteLine ("[SERVER SOCKET] XML saved to hard disk.");
 
 				// Lanzamos la simulacion
-				LaunchSimulation(idSimulation);	
+				LaunchProcess(idProcess);	
 			}
 		}
 
@@ -196,7 +195,7 @@ namespace PBioDaemon
 			}
 		}
 
-		private void LaunchSimulation (Guid idSimulation)
+		private void LaunchProcess (Guid idProcess)
 		{
 			// Creamos proceso SRUN para ejecutar de forma distribuida 
 			// el proceso que lanzara la simulacion, recogera los datos y los
@@ -206,7 +205,7 @@ namespace PBioDaemon
 
 			psf.FileName = "srun" ;
 			//psf.FileName = "C:\\Users\\Dani\\Documents\\MonoProjects\\RunnerConsole\\runnerLauncher\\bin\\Debug\\runnerLauncher.exe";
-			psf.Arguments = "-N1 'pbio_launcher.exe' " + idSimulation.ToString();
+			psf.Arguments = "-N1 'pbio_launcher.exe' " + idProcess.ToString();
 			proc.StartInfo = psf;
 
 			Console.WriteLine("[SERVER SOCKET] " + psf.FileName + " " + psf.Arguments); 
@@ -223,20 +222,20 @@ namespace PBioDaemon
 	         * - Terminate
 	         * - Error
 	         * 
-	         * -Realizar un chequeo inicial que ejecute de nuevo simulaciones que se encuentran en Running o Error al inicio, sin tener el server funcionando.
+	         * - Primero realizamos un chequeo inicial para ejecutar de nuevo simulaciones que se encuentran en Running o Error al inicio.
 	         * 
 	         * */ 
 			// Obtenemos las simulaciones que se quedaron lanzadas
-			List<Guid> simRunning = db.GetIdSimulationsRunning ();
+			List<Guid> processRunning = Proceso.GetIdProcessRunning ();
 
-			if (simRunning.Count > 0) {
-				Console.WriteLine ("[SERVER SOCKET] {0} simulations was running before init the server.", simRunning.Count);
+			if (processRunning.Count > 0) {
+				Console.WriteLine ("[SERVER SOCKET] {0} simulations was running before init the server.", processRunning.Count);
 
 				// Iteramos en la lista de simulaciones, actualizamos el estado y las lanzamos
-				foreach (Guid idSim in simRunning) {
-					Console.WriteLine ("[SERVER SOCKET] Rescued: {0}", idSim.ToString());
-					db.UpdateStateProcess ("ToRun", idSim);
-					LaunchSimulation(idSim);
+				foreach (Guid idProcess in processRunning) {
+					Console.WriteLine ("[SERVER SOCKET] Rescued: {0}", idProcess.ToString());
+					Estado.Update ("ToRun", idProcess);
+					LaunchProcess(idProcess);
 				} 
 			}        
 		}

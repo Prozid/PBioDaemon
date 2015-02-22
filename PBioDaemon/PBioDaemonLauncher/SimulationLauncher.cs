@@ -12,9 +12,8 @@ namespace PBioDaemonLauncher
 	{
 		private const String ResultsFileTag = "<Results>";
 		private const String ErrorFileTag = "<Error>";
-		private Simulacion simulacion;
+		private Simulacion simulation;
 		private LauncherConfiguration config;
-		private PBioDaemonDB db;
 		private ParametersLoader parametersLoader;
 		private Guid idProcess;
 
@@ -22,13 +21,12 @@ namespace PBioDaemonLauncher
 		{
 			try
 			{
-				this.config = new LauncherConfiguration();
-				this.db = new PBioDaemonDB(config.CONNECTION_STRING);
-				this.simulacion = db.GetSimulationById(idProcess);
-				this.parametersLoader = new ParametersLoader(simulacion.ParametrosClasificacion, simulacion.ParametrosSeleccion, simulacion.IdSimulacion);
-				this.parametersLoader.Merge();
-				this.parametersLoader.SetData(simulacion.Datos);
 				this.idProcess = idProcess;
+				this.config = new LauncherConfiguration();
+				this.simulation = Simulacion.GetSimulation(idProcess);
+				this.parametersLoader = new ParametersLoader(simulation.ParametrosClasificacion, simulation.ParametrosSeleccion, simulation.IdSimulacion);
+				this.parametersLoader.Merge();
+				this.parametersLoader.SetData(simulation.Datos);
 			}
 			catch (Exception e)
 			{
@@ -39,7 +37,7 @@ namespace PBioDaemonLauncher
 		public void Run()
 		{				
 			// Establecemos a "Running" el proceso.
-			db.UpdateStateProcess("Run",simulacion.IdSimulacion);	
+			Estado.Update("Run", idProcess);	
 
 			// Lanzamiento de la ejecución		
 			System.Diagnostics.ProcessStartInfo psf = new System.Diagnostics.ProcessStartInfo();
@@ -48,7 +46,7 @@ namespace PBioDaemonLauncher
 
 			// RUN ON LINUX
 			psf.FileName = config.PATH_MATLAB;
-			psf.Arguments = "-nodisplay -r \"bateriaGAmain('" + config.FOLDER_INI + "','LDA','" + simulacion.IdSimulacion.ToString() + "','" + simulacion.IdSimulacion.ToString() + "')\";quit";
+			psf.Arguments = "-nodisplay -r \"bateriaGAmain('" + config.FOLDER_INI + "','LDA','" + simulation.IdSimulacion.ToString() + "','" + simulation.IdSimulacion.ToString() + "')\";quit";
 
 			// RUN ON WINDOWS
 			//psf.FileName = "matlab";
@@ -59,7 +57,7 @@ namespace PBioDaemonLauncher
 			proc.Exited += new EventHandler(proc_Exited);   // Añadimos un evento para cuando finalice.
 			proc.StartInfo = psf;
 
-			Console.Write("[" + simulacion.IdSimulacion.ToString() + "]Launching MATLAB. Please wait...");
+			Console.Write("[" + simulation.IdSimulacion.ToString() + "]Launching MATLAB. Please wait...");
 
 			// Guardamos fecha inicio
 			DateTime fechaInicioSimulacion = DateTime.Now;
@@ -67,7 +65,7 @@ namespace PBioDaemonLauncher
 			proc.WaitForExit(); // Esperamos su finalización
 
 
-			Console.Write("[" + simulacion.IdSimulacion.ToString() + "] Matlab process finished.");
+			Console.Write("[" + simulation.IdSimulacion.ToString() + "] Matlab process finished.");
 
 			// Guardamos fecha de finalización
 			DateTime fechaFinSimulacion = DateTime.Now;
@@ -87,13 +85,13 @@ namespace PBioDaemonLauncher
 					resultados.FechaLanzamiento = fechaInicioSimulacion;
 					resultados.FechaFinalizacion = fechaFinSimulacion;
 					XDocument resultadosXML = resultados.ToXML();
-					resultadosXML.Save(simulacion.IdSimulacion.ToString() + ".xml");
+					resultadosXML.Save(simulation.IdSimulacion.ToString() + ".xml");
 
 					// Almacenar los resultados en BD
-					db.NewResult(idProcess, simulacion.IdSimulacion, resultadosXML);
+					Resultado.Create(idProcess, simulation.IdSimulacion, resultadosXML);
 
 					// Incluimos la ID de la simulación en el XML
-					resultadosXML.Root.Add(new XElement("IdSimulacion", simulacion.IdSimulacion));
+					resultadosXML.Root.Add(new XElement("IdSimulacion", simulation.IdSimulacion));
 
 					// Incluimos el <EOF> al final del archivo para que el servicio sepa cuando termina nuestro archivo y pasamos a bytes
 					sBytes = Encoding.ASCII.GetBytes(resultadosXML.ToString());
@@ -102,8 +100,8 @@ namespace PBioDaemonLauncher
 					SendResults(sBytes);                    
 
 					// Ejecución finalizada, establecemos como finalizada
-					db.UpdateStateProcess("Terminate", simulacion.IdSimulacion);
-					Console.WriteLine("[" + simulacion.IdSimulacion.ToString() + "] Finished");
+					Estado.Update("Terminate", idProcess);
+					Console.WriteLine("[" + simulation.IdSimulacion.ToString() + "] Finished");
 
 					// Eliminamos archivos de configuración
 					// TODO Arreglar, no permite borrar los datos porque dice que lo tiene otro proceso
@@ -144,14 +142,14 @@ namespace PBioDaemonLauncher
 				XDocument errorXML = log.ToXML();
 
 				// Incluimos la ID de la simulación en el XML
-				errorXML.Root.Add(new XElement("IdSimulacion", simulacion.IdSimulacion));
+				errorXML.Root.Add(new XElement("IdSimulacion", simulation.IdSimulacion));
 
 				// TODO Test: Modificar SendResults para que acepte bytes y no un XML.
 				sBytes = Encoding.ASCII.GetBytes(errorXML.ToString());
 
 				SendResults(sBytes);
 
-				db.UpdateStateProcess("Error", simulacion.IdSimulacion);
+				Estado.Update("Error", idProcess);
 			}            
 		}
 
@@ -171,7 +169,7 @@ namespace PBioDaemonLauncher
 			);
 
 			// Configuramos el envio
-			Console.WriteLine("[" + simulacion.IdSimulacion.ToString() + "] Starting to send results...");
+			Console.WriteLine("[" + simulation.IdSimulacion.ToString() + "] Starting to send results...");
 			Byte[] rBytes = new Byte[1024];
 			int raw;           
 
@@ -179,28 +177,28 @@ namespace PBioDaemonLauncher
 			try
 			{
 				// Conectamos con el servicio
-				Console.WriteLine("[" + simulacion.IdSimulacion.ToString() + "] Try to connect...");
+				Console.WriteLine("[" + simulation.IdSimulacion.ToString() + "] Try to connect...");
 				conexion.Connect(ipep);
-				Console.WriteLine("[" + simulacion.IdSimulacion.ToString() + "] Connected");
+				Console.WriteLine("[" + simulation.IdSimulacion.ToString() + "] Connected");
 
 				// Enviamos datos
 				conexion.Send(sBytes);
 
 				// Esperamos confirmación
-				Console.WriteLine("[" + simulacion.IdSimulacion.ToString() + "] Waiting answer...");
+				Console.WriteLine("[" + simulation.IdSimulacion.ToString() + "] Waiting answer...");
 				raw = conexion.Receive(rBytes);
 
 
-				Console.WriteLine("[" + simulacion.IdSimulacion.ToString() + "] Sended: " + sBytes.LongLength + " Received: " + rBytes.LongLength + "bytes");
+				Console.WriteLine("[" + simulation.IdSimulacion.ToString() + "] Sended: " + sBytes.LongLength + " Received: " + rBytes.LongLength + "bytes");
 				// Comprobamos confirmación
 				// TODO Comprobar confirmación recepción resultados. Estudiar decisión en caso que veamos que no ha llegado bien.
 
 				// Establecemos a "Completed" la simulación
-				db.UpdateStateProcess("Completed",simulacion.IdSimulacion);
+				Estado.Update("Completed", idProcess);
 			}
 			catch (Exception e)
 			{
-				Console.WriteLine("[" + simulacion.IdSimulacion.ToString() + "] Error: " + e.ToString());
+				Console.WriteLine("[" + simulation.IdSimulacion.ToString() + "] Error: " + e.ToString());
 			}			
 		}
 

@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Configuration;
 using System.Xml.Linq;
+using MySql.Data.MySqlClient;
 
 namespace PBioDaemonLibrary
 {
@@ -51,6 +53,80 @@ namespace PBioDaemonLibrary
 			);
 
 			return xml;			
+		}
+
+		public static Guid Create(Guid idProcess, Guid idSimulation, XDocument xml)
+		{
+			String cs = ConfigurationManager.ConnectionStrings["db"].ToString();
+			Guid idResult;
+
+			// Obtenemos un nuevo GUID para almacenar la simulacion en la BD.
+			using(MySqlConnection conn = new MySqlConnection(cs))
+			{				
+				string qGUID = "SELECT uuid() as id";
+
+				conn.Open();
+				MySqlCommand comm = new MySqlCommand(qGUID,conn);
+				MySqlDataReader myReader = comm.ExecuteReader();
+
+				if(myReader.Read())
+				{
+					idResult = myReader.GetGuid("id");
+				}
+				else
+				{
+					throw new Exception("Error: Cannot get a new id on database");
+				}
+				myReader.Close();
+
+				// Insertamos los resultados
+				string qSaveResult = "INSERT INTO Resultado " +
+					"(IdResultado, Xml, Proceso_IdProceso, IdSimulacion)"   +
+					" VALUES ( '"                   +
+					idResult.ToString()    	+ "','" +
+					xml 		            + "','" +
+					idProcess.ToString() 	+ "'," +
+					idSimulation.ToString() + "')";
+
+				comm = new MySqlCommand(qSaveResult,conn);
+				comm.ExecuteNonQuery();
+			}
+
+
+			return idResult;
+		}
+
+		public static XDocument GetXML(Guid idProcess)
+		{
+			String cs = ConfigurationManager.ConnectionStrings["db"].ToString();
+			XDocument xml;
+			String sXml;
+
+			using (MySqlConnection conn = new MySqlConnection(cs)) 
+			{
+				MySqlCommand myCommand;
+				MySqlDataReader myReader;
+
+				// Obtenemos los datos de la BD.
+				string qsProcess = "SELECT * FROM Proceso WHERE IdProceso = '" + idProcess.ToString() + "'";
+
+				conn.Open();
+				myCommand = new MySqlCommand (qsProcess, conn);
+				myReader = myCommand.ExecuteReader();
+
+
+				if(!myReader.Read())
+					throw new Exception("Error: Cannot retrive the process data.");
+
+				// Recogemos los resultados.
+				sXml = myReader.GetString("Xml");
+				myReader.Close();
+			}
+
+			// Parseamos el string a documento XML.
+			xml = XDocument.Parse(sXml);
+
+			return xml;
 		}
 	}
 }
