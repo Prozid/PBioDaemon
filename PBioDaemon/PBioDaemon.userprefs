@@ -1,8 +1,12 @@
 ﻿<Properties StartupItem="PBioDaemon/PBioDaemon.csproj">
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|x86" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="PBioDaemonLauncher/SimulationLauncher.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="PBioDaemon/PBioDaemonListener.cs">
     <Files>
-      <File FileName="PBioDaemonLauncher/SimulationLauncher.cs" Line="2" Column="2" />
+      <File FileName="PBioDaemon/PBioDaemonListener.cs" Line="28" Column="28" />
+      <File FileName="PBioDaemonLauncher/Launcher.cs" Line="1" Column="1" />
+      <File FileName="PBioDaemonLibrary/Proceso.cs" Line="1" Column="1" />
+      <File FileName="PBioDaemonLibrary/Estado.cs" Line="1" Column="1" />
+      <File FileName="PBioDaemonLauncher/SimulationLauncher.cs" Line="1" Column="1" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>

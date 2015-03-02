@@ -6,6 +6,13 @@ namespace PBioDaemonLibrary
 {
 	public class Estado
 	{
+		/* Posibles estados de la simulación
+	         * - ToRun
+			 * - Run
+	         * - Wait
+	         * - Terminate
+	         * - Error
+		*/
 		Guid IdEstado;
 		String Nombre;
 		String NombreCorto;

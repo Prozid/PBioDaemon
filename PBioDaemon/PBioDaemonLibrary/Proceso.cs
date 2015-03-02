@@ -25,7 +25,7 @@ namespace PBioDaemonLibrary
 
 		public static Guid Create(XDocument xml, String data)
 		{
-			Guid idProcess,idState;
+			Guid idProcess, idState;
 			String cs = ConfigurationManager.ConnectionStrings["db"].ToString();
 
 			// Obtenemos un nuevo GUID para almacenar el proceso en la BD.

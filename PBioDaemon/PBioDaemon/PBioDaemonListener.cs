@@ -19,7 +19,6 @@ namespace PBioDaemon
 		public int DAEMON_PORT; // Puerto en el que escucha el demonio Linux
 
 		public PBioDaemonConfiguration(){
-			CONNECTION_STRING = ConfigurationManager.ConnectionStrings["db"].ToString();
 			SERVICE_IP = ConfigurationManager.AppSettings["service_ip"].ToString();
 			SERVICE_PORT = int.Parse(ConfigurationManager.AppSettings["service_port"].ToString());
 			DAEMON_PORT = int.Parse(ConfigurationManager.AppSettings["daemon_port"].ToString());
@@ -28,22 +27,21 @@ namespace PBioDaemon
 
 	public class PBioDaemonListener
 	{
+		private PBioDaemonConfiguration config;
+
 		// State object for reading client data asynchronously
-		private class StateObject
-		{
-			// Client socket.
+		private class StateObject {
+			// Client  socket.
 			public Socket workSocket = null;
-			// Siz e of receive buffer
+			// Size of receive buffer.
 			public const int BufferSize = 1024;
 			// Receive buffer.
 			public byte[] buffer = new byte[BufferSize];
-			// Received data string
-			public StringBuilder sb = new StringBuilder();
+			// Received data string.
+			public StringBuilder sb = new StringBuilder();  
 		}
 
-		public static ManualResetEvent allDone = new ManualResetEvent(false); // TODO Evento para 	
-		private PBioDaemonConfiguration config;
-
+		private static ManualResetEvent allDone = new ManualResetEvent(false);
 
 		public PBioDaemonListener ()
 		{
@@ -61,6 +59,7 @@ namespace PBioDaemon
 
 			// Inicializamos la conexión
 			IPEndPoint ipep = new IPEndPoint(IPAddress.Any, config.DAEMON_PORT);
+
 			listener = new Socket(
 				AddressFamily.InterNetwork,
 				SocketType.Stream,
@@ -81,8 +80,7 @@ namespace PBioDaemon
 
 					// Iniciamos un socket asíncrono para escuchar conexiones
 					Console.WriteLine("[SERVER SOCKET] Waiting for a connection...");
-					listener.BeginAccept(new AsyncCallback(
-						AcceptCallback), listener);
+					listener.BeginAccept(new AsyncCallback(AcceptCallback), listener);
 
 					// Esperamos a que la conexión desbloquee el socket (no estoy seguro, mirar MSDN: http://msdn.microsoft.com/es-es/library/fx6588te(v=vs.80).aspx)
 					allDone.WaitOne();
@@ -99,10 +97,12 @@ namespace PBioDaemon
 		}
 
 		// Prepara un objeto StateObject dónde recibiremos los datos
-		public void AcceptCallback(IAsyncResult ar)
+		private static void AcceptCallback(IAsyncResult ar)
 		{
 			// Signal the main thread to continue.
 			allDone.Set();
+
+			Console.WriteLine ("[SERVER SOCKET] New connection.");
 
 			// Get the socket that handles the client request.
 			Socket listener = (Socket)ar.AsyncState;
@@ -116,7 +116,7 @@ namespace PBioDaemon
 		}
 
 		// Recepción de datos
-		public void ReadCallback(IAsyncResult ar)
+		private static void ReadCallback(IAsyncResult ar)
 		{
 			// Retrieve the state object and the handler socket
 			// from the asynchronous state object.
@@ -127,44 +127,51 @@ namespace PBioDaemon
 			int bytesRead = handler.EndReceive(ar);
 
 			if (bytesRead > 0) {
+				Console.WriteLine ("[SERVER SOCKET] Data received.");
+
 				// There  might be more data, so store the data received so far.
-				state.sb.Append (Encoding.ASCII.GetString (
-					state.buffer, 0, bytesRead));
+				state.sb.Append (Encoding.ASCII.GetString (state.buffer, 0, bytesRead));
+				if (state.sb.Length > 1) {
+					// Fin de la recepción de la simulación
+					// Obtenemos los datos recibidos
+					String content = state.sb.ToString ();
+					// All the data has been read from the 
+					// client. Display it on the console.
+					Console.WriteLine ("[SERVER SOCKET] Read {0} bytes from socket. \n", content.Length);
+					try {
+						// Parseamos el XML
+						XDocument datosSimulacion = XDocument.Parse (content);
 
-				// Not all data received. Get more.
-				handler.BeginReceive (state.buffer, 0, StateObject.BufferSize, 0,
-					new AsyncCallback (ReadCallback), state);
-			} else {
-				// Fin de la recepción de la simulación
-				// Obtenemos los datos recibidos
-				String content = state.sb.ToString ();
+						// Obtenemos los datos
+						String data = datosSimulacion.Root.Element ("Datos").Value;
+						datosSimulacion.Root.Element ("Datos").Remove ();
 
-				// All the data has been read from the 
-				// client. Display it on the console.
-				Console.WriteLine("[SERVER SOCKET] Read {0} bytes from socket. \n", content.Length);
+						// Insertamos la nueva simulacion en la base de datos.
+						//Guid idProcess = Proceso.Create (datosSimulacion, data);
 
-				// Parseamos el XML
-				XDocument datosSimulacion = XDocument.Parse(content);
+						Console.WriteLine ("[SERVER SOCKET] XML saved to hard disk.");
 
-				// Echo the data back to the client.
-				// TODO Checksum
-				Send(state.workSocket, datosSimulacion.ToString().Length.ToString());
+						// Lanzamos la simulacion
+						//LaunchProcess (idProcess);
 
-				// Obtenemos los datos
-				String data = datosSimulacion.Root.Element("Datos").Value;
-				datosSimulacion.Root.Element("Datos").Remove();
+						// Echo the data back to the client.
+						// TODO Checksum
+						var sha = new System.Security.Cryptography.SHA256Managed ();
+						byte[] byte_checksum = sha.ComputeHash (Encoding.ASCII.GetBytes (content));
+						String checksum = BitConverter.ToString (byte_checksum).Replace ("-", String.Empty);
 
-				// Insertamos la nueva simulacion en la base de datos.
-				Guid idProcess = Proceso.Create(datosSimulacion, data);
-
-				Console.WriteLine ("[SERVER SOCKET] XML saved to hard disk.");
-
-				// Lanzamos la simulacion
-				LaunchProcess(idProcess);	
+						Send (state.workSocket, checksum);
+					} catch (Exception e) {
+						Console.WriteLine ("[SERVER SOCKET] Error launching process: " + e.Message);
+						Send (state.workSocket, "<error>" + content.Length.ToString ());
+					}
+				} else {
+					Send (state.workSocket, "<error> No data received.");
+				}
 			}
 		}
 
-		private void Send(Socket handler, String data)
+		private static void Send(Socket handler, String data)
 		{
 			// Convert the string data to byte data using ASCII encoding.
 			byte[] byteData = Encoding.ASCII.GetBytes(data);
@@ -174,7 +181,7 @@ namespace PBioDaemon
 				new AsyncCallback(SendCallback), handler);
 		}
 
-		private void SendCallback(IAsyncResult ar)
+		private static void SendCallback(IAsyncResult ar)
 		{
 			try
 			{
@@ -195,7 +202,7 @@ namespace PBioDaemon
 			}
 		}
 
-		private void LaunchProcess (Guid idProcess)
+		private static void LaunchProcess (Guid idProcess)
 		{
 			// Creamos proceso SRUN para ejecutar de forma distribuida 
 			// el proceso que lanzara la simulacion, recogera los datos y los

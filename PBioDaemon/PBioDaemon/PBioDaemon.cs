@@ -3,6 +3,18 @@ using System.ServiceProcess;
 
 namespace PBioDaemon
 {
+	class MainClass
+	{			
+		public static void Main (string[] args)
+		{
+			Console.WriteLine("Start");
+			Console.WriteLine("[INFO] Starting P-Bio daemon...");
+			Console.WriteLine("[INFO] Starting threads...");
+			PBioDaemonListener runnerDaemonListener = new PBioDaemonListener();
+			runnerDaemonListener.Run();
+		}
+	}
+	/*
 	public partial class PBioDaemon : ServiceBase
 	{
 		private System.Diagnostics.EventLog pbioEventLog;
@@ -44,5 +56,6 @@ namespace PBioDaemon
 			System.ServiceProcess.ServiceBase.Run(new PBioDaemon());
 		}
 	}
+	*/
 }
 

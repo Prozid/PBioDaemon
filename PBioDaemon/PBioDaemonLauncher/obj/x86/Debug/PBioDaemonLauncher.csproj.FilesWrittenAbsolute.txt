@@ -2,3 +2,8 @@
 /home/dani/lab/PBioDaemon/PBioDaemon/PBioDaemonLauncher/bin/Debug/PBioDaemonLibrary.dll
 /home/dani/lab/PBioDaemon/PBioDaemon/PBioDaemonLauncher/bin/Debug/PBioDaemonLibrary.dll.mdb
 /home/dani/lab/PBioDaemon/PBioDaemon/PBioDaemonLauncher/bin/Debug/MySql.Data.dll
+/home/dani/lab/PBioDaemon/PBioDaemon/PBioDaemonLauncher/bin/Debug/PBioDaemonLauncher.exe.config
+/home/dani/lab/PBioDaemon/PBioDaemon/PBioDaemonLauncher/bin/Debug/PBioDaemonLauncher.exe.mdb
+/home/dani/lab/PBioDaemon/PBioDaemon/PBioDaemonLauncher/bin/Debug/PBioDaemonLauncher.exe
+/home/dani/lab/PBioDaemon/PBioDaemon/PBioDaemonLauncher/obj/x86/Debug/PBioDaemonLauncher.exe
+/home/dani/lab/PBioDaemon/PBioDaemon/PBioDaemonLauncher/obj/x86/Debug/PBioDaemonLauncher.exe.mdb
