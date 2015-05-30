@@ -5,6 +5,8 @@ using System.Text;
 using System.IO;
 using System.Net;
 using System.Net.Sockets;
+using System.Threading;
+using System.Security.Cryptography;
 
 namespace PBioDaemonLauncher
 {
@@ -157,7 +159,7 @@ namespace PBioDaemonLauncher
 			try
 			{
 				// Send data
-				Console.WriteLine("[SEND SIMULATION] Try to connect to " + sConfig.IpDaemon + ":" + sConfig.PortDaemon + "...");
+				Console.WriteLine("[SEND SIMULATION] Try to connect to " + config.SERVICE_IP + ":" + config.SERVICE_PORT + "...");
 
 				String response_checksum = PBioSocketClient.StartClient(config.SERVICE_IP, config.SERVICE_PORT, byteData);
 
@@ -219,7 +221,7 @@ namespace PBioDaemonLauncher
 	/// http://msdn.microsoft.com/es-es/library/bew39x2a(v=vs.80).aspx
 	class PBioSocketClient
 	{
-		private static System.Diagnostics.EventLog PBioEventLog = PBioEventLogger.initLogger();
+		//private static System.Diagnostics.EventLog PBioEventLog = PBioEventLogger.initLogger();
 		// ManualResetEvent instances signal completion.
 		private static ManualResetEvent connectDone = new ManualResetEvent(false);
 		private static ManualResetEvent sendDone = new ManualResetEvent(false);

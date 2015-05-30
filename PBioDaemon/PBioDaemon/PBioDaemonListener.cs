@@ -118,6 +118,8 @@ namespace PBioDaemon
 		// Recepción de datos
 		private static void ReadCallback(IAsyncResult ar)
 		{
+			String content = String.Empty;
+			
 			// Retrieve the state object and the handler socket
 			// from the asynchronous state object.
 			StateObject state = (StateObject)ar.AsyncState;
@@ -127,17 +129,27 @@ namespace PBioDaemon
 			int bytesRead = handler.EndReceive(ar);
 
 			if (bytesRead > 0) {
-				Console.WriteLine ("[SERVER SOCKET] Data received.");
-
 				// There  might be more data, so store the data received so far.
 				state.sb.Append (Encoding.ASCII.GetString (state.buffer, 0, bytesRead));
-				if (state.sb.Length > 1) {
-					// Fin de la recepción de la simulación
-					// Obtenemos los datos recibidos
-					String content = state.sb.ToString ();
+
+				// Obtenemos los datos recibidos
+				content = state.sb.ToString ();
+
+
+				if (content.IndexOf("<PBIOEOF>") > -1) { 
 					// All the data has been read from the 
 					// client. Display it on the console.
+					Console.WriteLine ("[SERVER SOCKET] Data received.");
 					Console.WriteLine ("[SERVER SOCKET] Read {0} bytes from socket. \n", content.Length);
+
+					// Checksum
+					var sha = new System.Security.Cryptography.SHA256Managed ();
+					byte[] byte_checksum = sha.ComputeHash (Encoding.ASCII.GetBytes (content));
+					String checksum = BitConverter.ToString (byte_checksum).Replace ("-", String.Empty);
+
+					int endTagIndex = content.IndexOf("<PBIOEOF>");
+					content = content.Remove(endTagIndex);
+
 					try {
 						// Parseamos el XML
 						XDocument datosSimulacion = XDocument.Parse (content);
@@ -155,18 +167,15 @@ namespace PBioDaemon
 						//LaunchProcess (idProcess);
 
 						// Echo the data back to the client.
-						// TODO Checksum
-						var sha = new System.Security.Cryptography.SHA256Managed ();
-						byte[] byte_checksum = sha.ComputeHash (Encoding.ASCII.GetBytes (content));
-						String checksum = BitConverter.ToString (byte_checksum).Replace ("-", String.Empty);
-
 						Send (state.workSocket, checksum);
 					} catch (Exception e) {
 						Console.WriteLine ("[SERVER SOCKET] Error launching process: " + e.Message);
 						Send (state.workSocket, "<error>" + content.Length.ToString ());
 					}
-				} else {
-					Send (state.workSocket, "<error> No data received.");
+				} 
+				else {
+					handler.BeginReceive(state.buffer, 0, StateObject.BufferSize, 0,
+						new AsyncCallback(ReadCallback), state);
 				}
 			}
 		}

@@ -1,9 +1,8 @@
-/home/dani/lab/PBioDaemon/PBioDaemon/PBioDaemon/obj/x86/Debug/.NETFramework,Version=v4.5.AssemblyAttribute.cs
-/home/dani/lab/PBioDaemon/PBioDaemon/PBioDaemon/bin/Debug/PBioDaemon.exe.mdb
-/home/dani/lab/PBioDaemon/PBioDaemon/PBioDaemon/bin/Debug/PBioDaemon.exe
-/home/dani/lab/PBioDaemon/PBioDaemon/PBioDaemon/obj/x86/Debug/PBioDaemon.exe
-/home/dani/lab/PBioDaemon/PBioDaemon/PBioDaemon/obj/x86/Debug/PBioDaemon.exe.mdb
-/home/dani/lab/PBioDaemon/PBioDaemon/PBioDaemon/bin/Debug/PBioDaemonLibrary.dll
-/home/dani/lab/PBioDaemon/PBioDaemon/PBioDaemon/bin/Debug/PBioDaemonLibrary.dll.mdb
-/home/dani/lab/PBioDaemon/PBioDaemon/PBioDaemon/bin/Debug/MySql.Data.dll
-/home/dani/lab/PBioDaemon/PBioDaemon/PBioDaemon/bin/Debug/PBioDaemon.exe.config
+/home/dani/Proyecto/PBioDaemon/PBioDaemon/PBioDaemon/obj/x86/Debug/.NETFramework,Version=v4.5.AssemblyAttribute.cs
+/home/dani/Proyecto/PBioDaemon/PBioDaemon/PBioDaemon/bin/Debug/PBioDaemon.exe.config
+/home/dani/Proyecto/PBioDaemon/PBioDaemon/PBioDaemon/bin/Debug/PBioDaemon.exe.mdb
+/home/dani/Proyecto/PBioDaemon/PBioDaemon/PBioDaemon/bin/Debug/PBioDaemon.exe
+/home/dani/Proyecto/PBioDaemon/PBioDaemon/PBioDaemon/obj/x86/Debug/PBioDaemon.exe
+/home/dani/Proyecto/PBioDaemon/PBioDaemon/PBioDaemon/obj/x86/Debug/PBioDaemon.exe.mdb
+/home/dani/Proyecto/PBioDaemon/PBioDaemon/PBioDaemon/bin/Debug/PBioDaemonLibrary.dll
+/home/dani/Proyecto/PBioDaemon/PBioDaemon/PBioDaemon/bin/Debug/PBioDaemonLibrary.dll.mdb
