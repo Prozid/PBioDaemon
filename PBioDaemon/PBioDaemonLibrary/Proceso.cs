@@ -74,15 +74,19 @@ namespace PBioDaemonLibrary
 			return idProcess;
 		}
 
-		public static List<Guid> GetIdProcessRunning()
+		public static List<Guid> GetIdProcessRunningOrWaiting()
 		{
 			String cs = ConfigurationManager.ConnectionStrings["db"].ToString();
 			List<Guid> processes = new List<Guid>();
 			Guid idRunningState = Estado.GetIdStateByName("Run");
+			Guid idToRunState = Estado.GetIdStateByName("ToRun");
+			Guid idWaitingState = Estado.GetIdStateByName("Wait");
 
 			using (MySqlConnection conn = new MySqlConnection(cs))
 			{
-				String qProcessesRunning = "SELECT * FROM Proceso WHERE Estado_IdEstado = '" + idRunningState +"'";
+				String qProcessesRunning = "SELECT * FROM Proceso WHERE Estado_IdEstado = '" + idRunningState 
+					+"' or Estado_IdEstado = '"+ idToRunState
+					+"' or Estado_IdEstado = '"+ idWaitingState +"'";
 
 				conn.Open();
 				MySqlCommand comm = new MySqlCommand(qProcessesRunning, conn);

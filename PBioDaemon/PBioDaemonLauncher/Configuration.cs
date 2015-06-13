@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Configuration;
+using System.IO;
 
 namespace PBioDaemonLauncher
 {
@@ -29,9 +30,9 @@ namespace PBioDaemonLauncher
 			this.DAEMON_PORT = int.Parse(ConfigurationManager.AppSettings["daemon_port"].ToString());
 
 			this.PATH = ConfigurationManager.AppSettings["datapath"].ToString();
-			this.FOLDER_INI = ConfigurationManager.AppSettings["folder_ini"].ToString();
-			this.FOLDER_DATASETS = ConfigurationManager.AppSettings["folder_datasets"].ToString();
-			this.FOLDER_RESULTS = ConfigurationManager.AppSettings["folder_results"].ToString();
+			this.FOLDER_INI = Path.Combine(this.PATH, ConfigurationManager.AppSettings["folder_ini"].ToString());
+			this.FOLDER_DATASETS = Path.Combine(this.PATH, ConfigurationManager.AppSettings["folder_datasets"].ToString());
+			this.FOLDER_RESULTS = Path.Combine(this.PATH, ConfigurationManager.AppSettings["folder_results"].ToString());
 			this.FILENAME_PARAMETERS = ConfigurationManager.AppSettings["filename_parameters"].ToString();
 			this.FILENAME_DATASET = ConfigurationManager.AppSettings["filename_dataset"].ToString();
 			this.FILENAME_RESULTS = ConfigurationManager.AppSettings["filename_results"].ToString();

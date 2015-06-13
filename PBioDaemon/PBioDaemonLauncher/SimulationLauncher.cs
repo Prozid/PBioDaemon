@@ -28,6 +28,7 @@ namespace PBioDaemonLauncher
 				this.simulation = Simulacion.GetSimulation(idProcess);
 				this.parametersLoader = new ParametersLoader(simulation.ParametrosClasificacion, simulation.ParametrosSeleccion, simulation.IdSimulacion);
 				this.parametersLoader.Merge();
+				//this.parametersLoader.CreateResultsFolder();
 				this.parametersLoader.SetData(simulation.Datos);
 			}
 			catch (Exception e)
@@ -48,7 +49,14 @@ namespace PBioDaemonLauncher
 
 			// RUN ON LINUX
 			psf.FileName = config.PATH_MATLAB;
-			psf.Arguments = "-nodisplay -r \"bateriaGAmain('" + config.FOLDER_INI + "','LDA','" + simulation.IdSimulacion.ToString() + "','" + simulation.IdSimulacion.ToString() + "')\";quit";
+			String mat_mainPath = config.FOLDER_INI +'/';
+			String mat_method = "LDA";
+			String mat_dataset = simulation.IdSimulacion.ToString();
+			String mat_guid = simulation.IdSimulacion.ToString();
+
+			//psf.Arguments = "-nodisplay -r \"bateriaGAmain('" + mat + "','LDA','" + simulation.IdSimulacion.ToString() + "','" + simulation.IdSimulacion.ToString() + "')\";quit";
+			psf.Arguments = String.Format("-nodisplay -r \"bateriaGAmain('{0}','{1}','{2}','{3}')\";quit", 
+				mat_mainPath, mat_method, mat_dataset, mat_guid);
 
 			// RUN ON WINDOWS
 			//psf.FileName = "matlab";
@@ -95,8 +103,8 @@ namespace PBioDaemonLauncher
 					// Incluimos la ID de la simulación en el XML
 					resultadosXML.Root.Add(new XElement("IdSimulacion", simulation.IdSimulacion));
 
-					// Incluimos el <EOF> al final del archivo para que el servicio sepa cuando termina nuestro archivo y pasamos a bytes
-					sBytes = Encoding.ASCII.GetBytes(resultadosXML.ToString());
+					// Incluimos el <PBIOEOF> al final del archivo para que el servicio sepa cuando termina nuestro archivo y pasamos a bytes
+					sBytes = Encoding.ASCII.GetBytes(resultadosXML.ToString()+ "<PBIOEOF>");
 
 					// Lanzamos sendResults para enviar los resultados al servicio Windows
 					SendResults(sBytes);                    
@@ -132,7 +140,7 @@ namespace PBioDaemonLauncher
 				else
 				{
 					// Si no hay ni archivo de error ni nada:
-					// Mandar un UNKNOWN_ERROR<EOF>
+					// Mandar un UNKNOWN_ERROR<PBIOEOF>
 					errorContent = "UNKNOWN_ERROR";
 				}
 
@@ -146,9 +154,7 @@ namespace PBioDaemonLauncher
 				// Incluimos la ID de la simulación en el XML
 				errorXML.Root.Add(new XElement("IdSimulacion", simulation.IdSimulacion));
 
-				// TODO Test: Modificar SendResults para que acepte bytes y no un XML.
-				sBytes = Encoding.ASCII.GetBytes(errorXML.ToString());
-
+				sBytes = Encoding.ASCII.GetBytes(errorXML.ToString()+"<PBIOEOF>");
 				SendResults(sBytes);
 				Estado.Update("Error", idProcess);
 			}            
@@ -162,7 +168,6 @@ namespace PBioDaemonLauncher
 				Console.WriteLine("[SEND SIMULATION] Try to connect to " + config.SERVICE_IP + ":" + config.SERVICE_PORT + "...");
 
 				String response_checksum = PBioSocketClient.StartClient(config.SERVICE_IP, config.SERVICE_PORT, byteData);
-
 				var sha = new SHA256Managed();
 				byte[] byte_checksum = sha.ComputeHash(byteData);
 				String checksum = BitConverter.ToString(byte_checksum).Replace("-", String.Empty);
@@ -172,10 +177,10 @@ namespace PBioDaemonLauncher
 				if (response_checksum != null && response_checksum == checksum)
 				{
 					// Mostramos confirmación
-					Console.WriteLine("[SEND SIMULATION]Confirmation: Sended: TODO show checksum, for example.");
+					Console.WriteLine("[SEND SIMULATION]Confirmation: Sended: checksum");
 					// Establecemos a "Completed" la simulación
 					// TODO: Estado completed no existe. Revisar si quitar o qué.
-					//Estado.Update("Completed", idProcess);
+					Estado.Update("Terminate", idProcess);
 				} else {
 					Console.WriteLine("[SEND SIMULATION] Send failed.");
 					// TODO: Ver que hacer si ha habido un error.
@@ -194,7 +199,7 @@ namespace PBioDaemonLauncher
 			}
 			catch (Exception error)
 			{
-				Console.WriteLine("[SEND SIMULATION] Error desconocido: " + error);
+				Console.WriteLine("[SEND SIMULATION] Unknown error: " + error);
 				Estado.Update("Error", idProcess);
 			}
 		}
@@ -330,6 +335,7 @@ namespace PBioDaemonLauncher
 		}
 		private static void Send(Socket client, byte[] byteData)
 		{
+			Console.WriteLine("Begin to send");
 			// Begin sending the data to the remote device.
 			client.BeginSend(byteData, 0, byteData.Length, 0,
 				new AsyncCallback(SendCallback), client);

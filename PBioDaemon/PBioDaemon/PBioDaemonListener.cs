@@ -159,12 +159,12 @@ namespace PBioDaemon
 						datosSimulacion.Root.Element ("Datos").Remove ();
 
 						// Insertamos la nueva simulacion en la base de datos.
-						//Guid idProcess = Proceso.Create (datosSimulacion, data);
+						Guid idProcess = Proceso.Create (datosSimulacion, data);
 
 						Console.WriteLine ("[SERVER SOCKET] XML saved to hard disk.");
 
 						// Lanzamos la simulacion
-						//LaunchProcess (idProcess);
+						LaunchProcess (idProcess);
 
 						// Echo the data back to the client.
 						Send (state.workSocket, checksum);
@@ -183,7 +183,8 @@ namespace PBioDaemon
 		private static void Send(Socket handler, String data)
 		{
 			// Convert the string data to byte data using ASCII encoding.
-			byte[] byteData = Encoding.ASCII.GetBytes(data);
+			String content = data + "<PBIOEOF>";
+			byte[] byteData = Encoding.ASCII.GetBytes(content);
 
 			// Begin sending the data to the remote device.
 			handler.BeginSend(byteData, 0, byteData.Length, 0,
@@ -219,9 +220,18 @@ namespace PBioDaemon
 			System.Diagnostics.ProcessStartInfo psf = new System.Diagnostics.ProcessStartInfo();
 			System.Diagnostics.Process proc = new System.Diagnostics.Process();
 
-			psf.FileName = "srun" ;
-			//psf.FileName = "C:\\Users\\Dani\\Documents\\MonoProjects\\RunnerConsole\\runnerLauncher\\bin\\Debug\\runnerLauncher.exe";
-			psf.Arguments = "-N1 'pbio_launcher.exe' " + idProcess.ToString();
+			/*
+			 * Cluster launch
+			 */
+			//psf.FileName = "srun" ;
+			//psf.Arguments = "-N1 'pbio_launcher.exe' " + idProcess.ToString();
+
+			/*
+			 * Dev launch
+			 */
+			psf.FileName = "/home/dani/Proyecto/PBioDaemon/PBioDaemon/PBioDaemonLauncher/bin/Debug/PBioDaemonLauncher.exe" ;
+			psf.Arguments = idProcess.ToString();
+
 			proc.StartInfo = psf;
 
 			Console.WriteLine("[SERVER SOCKET] " + psf.FileName + " " + psf.Arguments); 
@@ -242,13 +252,13 @@ namespace PBioDaemon
 	         * 
 	         * */ 
 			// Obtenemos las simulaciones que se quedaron lanzadas
-			List<Guid> processRunning = Proceso.GetIdProcessRunning ();
+			List<Guid> processRunningOrWaiting = Proceso.GetIdProcessRunningOrWaiting ();
 
-			if (processRunning.Count > 0) {
-				Console.WriteLine ("[SERVER SOCKET] {0} simulations was running before init the server.", processRunning.Count);
+			if (processRunningOrWaiting.Count > 0) {
+				Console.WriteLine ("[SERVER SOCKET] {0} simulations was running before init the server.", processRunningOrWaiting.Count);
 
 				// Iteramos en la lista de simulaciones, actualizamos el estado y las lanzamos
-				foreach (Guid idProcess in processRunning) {
+				foreach (Guid idProcess in processRunningOrWaiting) {
 					Console.WriteLine ("[SERVER SOCKET] Rescued: {0}", idProcess.ToString());
 					Estado.Update ("ToRun", idProcess);
 					LaunchProcess(idProcess);

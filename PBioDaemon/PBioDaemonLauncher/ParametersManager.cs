@@ -66,11 +66,13 @@ namespace PBioDaemonLauncher
 		private Dictionary<String, String> ParametersFromStringToDictionary(String parameters)
 		{
 			Dictionary<String, String> parametersProcessed = new Dictionary<String, String>();
-			String[] parameterRaw = parameters.Split(';');
+			if (parameters != ""){
+				String[] parameterRaw = parameters.Split(';');
 
-			foreach (String p in parameterRaw)
-			{
-				parametersProcessed.Add(p.Split('=')[0], p.Split('=')[1]);
+				foreach (String p in parameterRaw)
+				{
+					parametersProcessed.Add(p.Split('=')[0], p.Split('=')[1]);
+				}
 			}
 
 			return parametersProcessed;
@@ -79,7 +81,7 @@ namespace PBioDaemonLauncher
 		public void Merge()
 		{
 			// Abrimos el archivo de parámatros por defecto.
-			String[] lines = System.IO.File.ReadAllLines(System.IO.Path.Combine(config.FOLDER_INI, config.FILENAME_PARAMETERS));
+			String[] lines = System.IO.File.ReadAllLines(Path.Combine(config.FOLDER_INI, config.FILENAME_PARAMETERS));
 
 
 			// Actualizamos con los parámetros de clasificación seleccionados
@@ -136,6 +138,15 @@ namespace PBioDaemonLauncher
 			writer.WriteLine(data);
 			writer.Flush();
 			writer.Close();
+		}
+
+		public void CreateResultsFolder()
+		{
+			// Obtenemos la ruta dónde Matlab guardará los resultados.
+			String pathResults = System.IO.Path.Combine(config.FOLDER_RESULTS, _idSimulation.ToString());
+
+			// Creamos la carpeta
+			System.IO.Directory.CreateDirectory(pathResults);
 		}
 
 		public void RemoveParametersAndData()
