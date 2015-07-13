@@ -1,33 +1,13 @@
 ﻿<Properties StartupItem="PBioDaemon/PBioDaemon.csproj">
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|x86" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="PBioDaemonLauncher/SimulationLauncher.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="PBioDaemon/PBioDaemon.cs">
     <Files>
-      <File FileName="PBioDaemonLauncher/SimulationLauncher.cs" Line="157" Column="1" />
-      <File FileName="PBioDaemon/PBioDaemonListener.cs" Line="128" Column="40" />
-      <File FileName="PBioDaemonLauncher/Launcher.cs" Line="15" Column="45" />
-      <File FileName="PBioDaemonLibrary/Resultado.cs" Line="1" Column="1" />
+      <File FileName="PBioDaemon/PBioDaemon.cs" Line="60" Column="2" />
     </Files>
-    <Pads>
-      <Pad Id="ProjectPad">
-        <State name="__root__">
-          <Node name="PBioDaemon" expanded="True">
-            <Node name="PBioDaemon" expanded="True">
-              <Node name="References" expanded="True" />
-            </Node>
-            <Node name="PBioDaemonLauncher" expanded="True" selected="True" />
-            <Node name="PBioDaemonLibrary" expanded="True" />
-          </Node>
-        </State>
-      </Pad>
-      <Pad Id="MonoDevelop.Debugger.WatchPad">
-        <State />
-      </Pad>
-    </Pads>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
     <BreakpointStore>
       <Breakpoint file="/home/dani/Proyecto/PBioDaemon/PBioDaemon/PBioDaemonLauncher/SimulationLauncher.cs" line="87" column="1" />
-      <Breakpoint file="/home/dani/Proyecto/PBioDaemon/PBioDaemon/PBioDaemonLauncher/SimulationLauncher.cs" line="155" column="1" />
     </BreakpointStore>
   </MonoDevelop.Ide.DebuggingService.Breakpoints>
   <MonoDevelop.Ide.DebuggingService.PinnedWatches>

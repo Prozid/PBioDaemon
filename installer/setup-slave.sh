@@ -9,7 +9,5 @@
 #
 ####################################################################
 source ./scripts/setup-aux.sh
-source ./scripts/setup-mysql.sh
 source ./scripts/setup-mono.sh
-source ./scripts/setup-library.sh
 source ./scripts/setup-launcher.sh

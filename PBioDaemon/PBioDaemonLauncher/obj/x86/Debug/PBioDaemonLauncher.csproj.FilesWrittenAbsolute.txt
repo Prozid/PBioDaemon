@@ -1,8 +1,8 @@
 /home/dani/Proyecto/PBioDaemon/PBioDaemon/PBioDaemonLauncher/obj/x86/Debug/.NETFramework,Version=v4.5.AssemblyAttribute.cs
-/home/dani/Proyecto/PBioDaemon/PBioDaemon/PBioDaemonLauncher/bin/Debug/PBioDaemonLauncher.exe.config
-/home/dani/Proyecto/PBioDaemon/PBioDaemon/PBioDaemonLauncher/bin/Debug/PBioDaemonLauncher.exe.mdb
-/home/dani/Proyecto/PBioDaemon/PBioDaemon/PBioDaemonLauncher/bin/Debug/PBioDaemonLauncher.exe
-/home/dani/Proyecto/PBioDaemon/PBioDaemon/PBioDaemonLauncher/obj/x86/Debug/PBioDaemonLauncher.exe
-/home/dani/Proyecto/PBioDaemon/PBioDaemon/PBioDaemonLauncher/obj/x86/Debug/PBioDaemonLauncher.exe.mdb
-/home/dani/Proyecto/PBioDaemon/PBioDaemon/PBioDaemonLauncher/bin/Debug/PBioDaemonLibrary.dll
-/home/dani/Proyecto/PBioDaemon/PBioDaemon/PBioDaemonLauncher/bin/Debug/PBioDaemonLibrary.dll.mdb
+/home/dani/Proyecto/PBioDaemon/PBioDaemon/PBioDaemonLauncher/bin/Debug/pbiolauncher.exe.config
+/home/dani/Proyecto/PBioDaemon/PBioDaemon/PBioDaemonLauncher/bin/Debug/pbiolauncher.exe.mdb
+/home/dani/Proyecto/PBioDaemon/PBioDaemon/PBioDaemonLauncher/bin/Debug/pbiolauncher.exe
+/home/dani/Proyecto/PBioDaemon/PBioDaemon/PBioDaemonLauncher/obj/x86/Debug/pbiolauncher.exe
+/home/dani/Proyecto/PBioDaemon/PBioDaemon/PBioDaemonLauncher/obj/x86/Debug/pbiolauncher.exe.mdb
+/home/dani/Proyecto/PBioDaemon/PBioDaemon/PBioDaemonLauncher/bin/Debug/pbiolib.dll
+/home/dani/Proyecto/PBioDaemon/PBioDaemon/PBioDaemonLauncher/bin/Debug/pbiolib.dll.mdb
