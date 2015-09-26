@@ -19,6 +19,7 @@ namespace PBioDaemon
 		public int DAEMON_PORT; // Puerto en el que escucha el demonio Linux
 
 		public PBioDaemonConfiguration(){
+			CONNECTION_STRING = ConfigurationManager.ConnectionStrings["db"].ToString();
 			SERVICE_IP = ConfigurationManager.AppSettings["service_ip"].ToString();
 			SERVICE_PORT = int.Parse(ConfigurationManager.AppSettings["service_port"].ToString());
 			DAEMON_PORT = int.Parse(ConfigurationManager.AppSettings["daemon_port"].ToString());
@@ -46,6 +47,7 @@ namespace PBioDaemon
 		public PBioDaemonListener ()
 		{
 			config = new PBioDaemonConfiguration ();
+			Console.WriteLine("CS: {0}\t Daemon port:{1}\t Service{2}:{3}", config.CONNECTION_STRING, config.DAEMON_PORT, config.SERVICE_IP, config.SERVICE_PORT);
 		}
 
 		public void Run()
@@ -223,14 +225,14 @@ namespace PBioDaemon
 			/*
 			 * Cluster launch
 			 */
-			//psf.FileName = "srun" ;
-			//psf.Arguments = "-N1 'pbio_launcher.exe' " + idProcess.ToString();
+			psf.FileName = "srun" ;
+			psf.Arguments = "-N1 'mono ~/pbio/bin/pbiolauncher.exe' " + idProcess.ToString();
 
 			/*
 			 * Dev launch
 			 */
-			psf.FileName = "/home/dani/Proyecto/PBioDaemon/PBioDaemon/PBioDaemonLauncher/bin/Debug/PBioDaemonLauncher.exe" ;
-			psf.Arguments = idProcess.ToString();
+			//psf.FileName = "/home/dani/Proyecto/PBioDaemon/PBioDaemon/PBioDaemonLauncher/bin/Debug/PBioDaemonLauncher.exe" ;
+			//psf.Arguments = idProcess.ToString();
 
 			proc.StartInfo = psf;
 

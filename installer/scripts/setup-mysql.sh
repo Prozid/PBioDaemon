@@ -12,4 +12,4 @@ echo "Installing MySQL server"
 apt-install-if-needed mysql-server
 
 echo "Creating PBio database"
-mysql -u root -proot < ./scripts/create_database.sql
+mysql -u root -p < ./scripts/create_database.sql

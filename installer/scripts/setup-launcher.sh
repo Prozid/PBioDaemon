@@ -18,7 +18,8 @@ echo "Creating P-Bio log folder..."
 mkdir $HOME/pbio/log
 
 echo "Installing P-Bio Launcher"
-mv ./bin/pbiolauncher.exe $HOME/pbio/bin/pbiolauncher.exe
-mv ./bin/pbiolauncher.exe.config $HOME/pbio/bin/pbiolauncher.exe.config
-mv ./bin/pbiolib.dll $HOME/pbio/bin/pbiolib.dll
+cp ./bin/pbiolauncher.exe $HOME/pbio/bin/pbiolauncher.exe
+cp ./bin/pbiolauncher.exe.config $HOME/pbio/bin/pbiolauncher.exe.config
+cp ./bin/pbiolib.dll $HOME/pbio/bin/pbiolib.dll
+
 

@@ -23,9 +23,9 @@ echo "Creating P-Bio log folder..."
 mkdir $HOME/pbio/log
 
 echo "Installing P-Bio Daemon"
-mv ./bin/pbiod.exe $HOME/pbio/bin/pbiod.exe
-mv ./bin/pbiod.exe.config $HOME/pbio/bin/pbiod.exe.config
-mv ./bin/pbiolib.dll $HOME/pbio/bin/pbiolib.dll
+cp ./bin/pbiod.exe $HOME/pbio/bin/pbiod.exe
+cp ./bin/pbiod.exe.config $HOME/pbio/bin/pbiod.exe.config
+cp ./bin/pbiolib.dll $HOME/pbio/bin/pbiolib.dll
 
 echo "Creating pbio.conf..."
 # command=mono-service2 pbiod.exe --no-daemon

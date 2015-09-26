@@ -28,7 +28,7 @@ namespace PBioDaemonLauncher
 				this.simulation = Simulacion.GetSimulation(idProcess);
 				this.parametersLoader = new ParametersLoader(simulation.ParametrosClasificacion, simulation.ParametrosSeleccion, simulation.IdSimulacion);
 				this.parametersLoader.Merge();
-				//this.parametersLoader.CreateResultsFolder();
+				this.parametersLoader.CreateResultsFolder();
 				this.parametersLoader.SetData(simulation.Datos);
 			}
 			catch (Exception e)

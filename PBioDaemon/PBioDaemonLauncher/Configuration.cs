@@ -29,6 +29,7 @@ namespace PBioDaemonLauncher
 			this.SERVICE_PORT = int.Parse(ConfigurationManager.AppSettings["service_port"].ToString());
 			this.DAEMON_PORT = int.Parse(ConfigurationManager.AppSettings["daemon_port"].ToString());
 
+			//String HOME = Environment.GetFolderPath(Environment.SpecialFolder.Personal);
 			this.PATH = ConfigurationManager.AppSettings["datapath"].ToString();
 			this.FOLDER_INI = Path.Combine(this.PATH, ConfigurationManager.AppSettings["folder_ini"].ToString());
 			this.FOLDER_DATASETS = Path.Combine(this.PATH, ConfigurationManager.AppSettings["folder_datasets"].ToString());

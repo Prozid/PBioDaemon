@@ -1,20 +1,37 @@
-﻿<Properties StartupItem="PBioDaemon/PBioDaemon.csproj">
+﻿<Properties StartupItem="PBioDaemonLauncher/PBioDaemonLauncher.csproj">
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|x86" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="PBioDaemon/PBioDaemon.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="PBioDaemon/app.config">
     <Files>
-      <File FileName="PBioDaemon/PBioDaemon.cs" Line="60" Column="2" />
+      <File FileName="PBioDaemonLauncher/SimulationLauncher.cs" Line="32" Column="1" />
+      <File FileName="PBioDaemonLauncher/ParametersManager.cs" Line="82" Column="1" />
+      <File FileName="PBioDaemonLauncher/app.config" Line="7" Column="41" />
+      <File FileName="PBioDaemonLauncher/Configuration.cs" Line="32" Column="6" />
+      <File FileName="PBioDaemonLauncher/Launcher.cs" Line="1" Column="1" />
+      <File FileName="PBioDaemon/app.config" Line="7" Column="40" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
-    <BreakpointStore>
-      <Breakpoint file="/home/dani/Proyecto/PBioDaemon/PBioDaemon/PBioDaemonLauncher/SimulationLauncher.cs" line="87" column="1" />
-    </BreakpointStore>
+    <BreakpointStore />
   </MonoDevelop.Ide.DebuggingService.Breakpoints>
   <MonoDevelop.Ide.DebuggingService.PinnedWatches>
     <Watch file="PBioDaemonLauncher/Launcher.cs" line="7" offsetX="456" offsetY="108" expression="args" liveUpdate="False" />
+    <Watch file="PBioDaemonLauncher/SimulationLauncher.cs" line="36" offsetX="272" offsetY="630" expression="e" liveUpdate="False" />
   </MonoDevelop.Ide.DebuggingService.PinnedWatches>
   <AuthorInfo Name="Daniel Sánchez Prolongo" Email="daniprolongo@gmail.com" Copyright="Daniel Sánchez Prolongo" Company="Universidad de Málaga" Trademark="" />
   <MonoDevelop.Ide.ItemProperties.PBioDaemonLauncher>
-    <MonoDevelop.Ide.CustomExecutionModes />
+    <MonoDevelop.Ide.CustomExecutionModes>
+      <Data Name="Predeterminado (Custom)" Id="c9606d53-f241-4d0e-a9b7-41b14ea359c2" ModeId="Default">
+        <CommandData>
+          <Item Key="MonoDevelop.Ide.Execution.CustomArgsCustomizer">
+            <Value Arguments="315575a4-6475-11e5-aad5-0800273d147a" ctype="CustomArgsExecutionModeData">
+              <EnvironmentVariables />
+            </Value>
+          </Item>
+          <Item Key="MonoDevelop.Ide.Execution.MonoExecutionCustomizer">
+            <Value ctype="MonoExecutionParameters" />
+          </Item>
+        </CommandData>
+      </Data>
+    </MonoDevelop.Ide.CustomExecutionModes>
   </MonoDevelop.Ide.ItemProperties.PBioDaemonLauncher>
 </Properties>
