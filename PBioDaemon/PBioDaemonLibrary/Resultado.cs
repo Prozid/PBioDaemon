@@ -85,7 +85,7 @@ namespace PBioDaemonLibrary
 					" VALUES ( '"                   +
 					idResult.ToString()    	+ "','" +
 					xml 		            + "','" +
-					idProcess.ToString() 	+ "'," +
+					idProcess.ToString() 	+ "','" +
 					idSimulation.ToString() + "')";
 
 				comm = new MySqlCommand(qSaveResult,conn);
